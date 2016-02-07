@@ -43,7 +43,7 @@ flags = [
     '-I',
     '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1',
     '-I',
-    '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/7.0.0/include',
+    '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/7.0.2/include',
     '-I',
     '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
     '-I',
@@ -53,7 +53,9 @@ flags = [
     '-I',
     '/usr/local/include',
     '-I',
-    '/Users/baidu/workspace/nacl_sdk/pepper_46/include',
+    '/Users/baidu/workspace/commercial_software/libxl-mac-3.6.5.2/include_cpp',
+    '-I',
+    '.',
 ]
 
 
