@@ -1,11 +1,11 @@
-#include <iostream>
-#include <libxl.h>
-#include <string>
-#include <boost/filesystem.hpp>
-#include <boost/algorithm/string.hpp>
-#include <vector>
-#include <fstream>
 #include <gflags/gflags.h>
+#include <libxl.h>
+#include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 
 DEFINE_string(d, "", "root directory");
 
@@ -255,8 +255,10 @@ void walk_directory(const string& dir) {
                     for (bfs::directory_iterator ls(w->path()), le; ls != le;
                          ++ls) {
                         if (bfs::is_regular(ls->status()) &&
-                            boost::algorithm::ends_with(ls->path().c_str(),
-                                                        ".xls")) {
+                            (boost::algorithm::ends_with(ls->path().c_str(),
+                                                         ".xls") ||
+                             boost::algorithm::ends_with(ls->path().c_str(),
+                                                         ".xlsx"))) {
                             string fn(ls->path().c_str());
                             m.add_agent(fn);
                         }
