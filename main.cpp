@@ -76,11 +76,16 @@ class Agent {
 
     bool init(const string& fn) {
         filename = fn;
-        book = xlCreateBook();
+        if (boost::algorithm::ends_with(fn, "xls")) {
+            book = xlCreateBook();
+        } else {
+            book = xlCreateXMLBook();
+        }
         if (book == nullptr) {
             return false;
         }
         if (!book->load(filename.c_str())) {
+            cerr << "load book error! " << fn << endl;
             return false;
         }
         sheet = book->getSheet(0);
@@ -148,6 +153,7 @@ class Manager {
     void add_agent(const string& fn) {
         Agent agent;
         if (agent.init(fn) && agent.parse() == 0) {
+            cerr << "add agent " << fn << endl;
             agents.push_back(std::move(agent));
         }
     }
@@ -158,7 +164,7 @@ class Manager {
         if (agents.size() == 0) {
             return 0;
         }
-        string fn = std::move(build_ofn());
+        string fn = build_ofn();
         libxl::Book* book = xlCreateBook();
         if (book == nullptr) {
             return -1;
@@ -192,6 +198,9 @@ class Manager {
             sheet->writeStr(1, 18, "电话号码");
             int row = 2;
             for (const Agent& agent : agents) {
+                if (agent.name.size() == 0) {
+                    continue;
+                }
                 sheet->writeStr(row, 0, agent.name.c_str());
                 sheet->writeNum(row, 1, agent.huokuan.shoukuan);
                 sheet->writeNum(row, 2, agent.huokuan.fahuo);
@@ -260,6 +269,7 @@ void walk_directory(const string& dir) {
                              boost::algorithm::ends_with(ls->path().c_str(),
                                                          ".xlsx"))) {
                             string fn(ls->path().c_str());
+                            cerr << fn << endl;
                             m.add_agent(fn);
                         }
                     }
@@ -273,7 +283,8 @@ void walk_directory(const string& dir) {
                 }
 
                 if (bfs::is_regular(w->status()) &&
-                    boost::algorithm::ends_with(w->path().c_str(), ".xls")) {
+                    (boost::algorithm::ends_with(w->path().c_str(), ".xls") ||
+                     boost::algorithm::ends_with(w->path().c_str(), ".xlsx"))) {
                     string fn(w->path().c_str());
                     fake.add_agent(fn);
                 }
